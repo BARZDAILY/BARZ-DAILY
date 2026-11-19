@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Barz Daily — Kenya's Pulse in Music, Culture & Entertainment</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<style>
+:root{--acc:#BB1919;--bg:#fff;--bg2:#f6f6f6;--ink:#121212;--line:#e2e2e2;--mut:#6b6b6b}
+.dark{--bg:#121212;--bg2:#1b1b1b;--ink:#f2f2f2;--line:#333;--mut:#a0a0a0}
+body{background:var(--bg);color:var(--ink);font-family:Georgia,serif}
+.sans{font-family:Helvetica,Arial,sans-serif}.mono{font-family:ui-monospace,Menlo,monospace}
+.tag{background:var(--acc);color:#fff;font:700 11px Helvetica,Arial;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;display:inline-block}
+.hl{font-family:Helvetica,Arial,sans-serif;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.hair{border-color:var(--line)}.bg2{background:var(--bg2)}.mut{color:var(--mut)}
+.meta{font:11px ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.btn{font:700 12px Helvetica,Arial;letter-spacing:.08em;text-transform:uppercase;padding:10px 14px;background:var(--acc);color:#fff}
+.btn2{border:1px solid var(--line);background:var(--bg)}
+.tab.on{border-bottom:3px solid var(--acc)}
+@keyframes tk{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tkr{display:inline-flex;white-space:nowrap;animation:tk 40s linear infinite}
+.card img,.ph{aspect-ratio:16/9;width:100%;object-fit:cover;background:#2a2a2a;display:block}
+.art p{margin:0 0 1.1em;line-height:1.7;font-size:18px}.art h3{font:800 24px Helvetica,Arial;margin:1.4em 0 .5em}
+.art blockquote{border-left:4px solid var(--acc);padding:4px 0 4px 18px;font-size:24px;font-style:italic;margin:1.4em 0}
+input,select,textarea{background:var(--bg);color:var(--ink);border:1px solid var(--line);padding:8px 10px;width:100%;font:14px Helvetica,Arial}
+.sw{display:flex;gap:6px;align-items:center;font:12px Helvetica}
+.hid{display:none!important}
+</style></head>
+<body class="sans">
+<!-- UTILITY BAR -->
+<div style="background:#000;color:#bbb" class="mono text-[11px] tracking-widest uppercase">
+<div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center gap-3 flex-wrap">
+<div><span style="color:var(--acc)">●</span> Nairobi &nbsp;|&nbsp; <span id="clock"></span></div>
+<div class="flex gap-4 items-center"><span id="soc" class="flex gap-4"></span><a id="par" target="_blank" rel="noopener" class="hidden sm:inline"></a></div></div></div>
+<!-- HEADER -->
+<header class="sticky top-0 z-40 border-b hair" style="background:var(--bg)">
+<div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4 flex-wrap">
+<a id="logo" href="#" onclick="go('');return false" class="hl text-4xl"></a>
+<div class="flex-1"></div>
+<form id="sf" class="flex"><input id="q" placeholder="Search stories, artists, scenes" style="width:260px"><button class="btn">Go</button></form>
+<button id="dm" class="btn2 px-3 py-2" title="Dark/Light">◐</button>
+<button id="sub" class="btn">+ Submit Music</button></div>
+<nav id="cats" class="max-w-7xl mx-auto px-4 flex gap-6 overflow-x-auto text-sm font-bold uppercase tracking-wide"></nav>
+</header>
+<div id="brk" style="background:var(--acc);color:#fff" class="overflow-hidden py-3 text-sm font-bold uppercase sans"><div class="max-w-7xl mx-auto px-4 flex gap-4"><span>● Breaking</span><div class="overflow-hidden flex-1"><div id="tk" class="tkr"></div></div></div></div>
+
+<div id="secs"></div>
+<main id="reader" class="hid max-w-3xl mx-auto px-4 py-10"></main>
+
+<footer id="foot" style="background:#121212;color:#ddd" class="mt-10"></footer>
+
+<!-- SUBMIT MODAL -->
+<div id="modal" class="hid fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(0,0,0,.7)">
+<div class="max-w-xl w-full p-6 max-h-[90vh] overflow-y-auto" style="background:var(--bg)"><div class="flex justify-between"><div class="meta" style="color:var(--acc)">The Submission Desk</div><button onclick="modal.classList.add('hid')" class="text-xl">✕</button></div>
+<h2 class="hl text-4xl my-2">Send us the record.</h2><p class="mut mb-4">Artists, managers and PR agencies: drop a link, a press kit and the story.</p>
+<form id="subf" class="grid grid-cols-2 gap-3"><input name="a" placeholder="Act / Artist name *" required><input name="n" placeholder="Your name *" required><input name="e" type="email" placeholder="Email *" required><input name="p" placeholder="Phone / WhatsApp +254…">
+<select name="t" class="col-span-2"><option>Single</option><option>EP / Album</option><option>Music Video</option><option>Press Release</option><option>Freestyle</option></select>
+<input name="l" class="col-span-2" placeholder="Streaming / video / download link *" required><textarea name="s" class="col-span-2" rows="3" placeholder="The story"></textarea>
+<button class="btn col-span-2">Submit</button></form></div></div>
+
+<!-- EDITOR -->
+<div id="editor" class="hid fixed inset-0 z-50 overflow-y-auto" style="background:var(--bg)">
+<div id="gate" class="max-w-sm mx-auto mt-32 p-6 border hair"><h2 class="hl text-2xl mb-3">Editor Studio</h2><input id="pw" type="password" placeholder="Passcode"><button id="pwb" class="btn mt-3 w-full">Enter</button><p id="pwe" class="text-red-600 text-sm mt-2"></p><a href="#" onclick="go('');return false" class="meta">← Back to site</a></div>
+<div id="studio" class="hid">
+<div class="sticky top-0 z-10 flex gap-2 items-center flex-wrap p-3 border-b hair" style="background:var(--bg)"><b class="hl text-xl mr-4">STUDIO</b>
+<button class="tab on px-3 py-1 font-bold text-sm" data-t="t1">Articles</button><button class="tab px-3 py-1 font-bold text-sm" data-t="t5">Sections &amp; Layout</button><button class="tab px-3 py-1 font-bold text-sm" data-t="t4">Site Settings</button><button class="tab px-3 py-1 font-bold text-sm" data-t="t6">Media Library</button><button class="tab px-3 py-1 font-bold text-sm" data-t="t2">Barz Daily TV</button><button class="tab px-3 py-1 font-bold text-sm" data-t="t3">Weekly Hot 10</button>
+<span class="flex-1"></span><button id="dl" class="btn">Download articles.json</button><button id="cp" class="btn btn2" style="color:var(--ink)">Copy JSON</button><button onclick="go('')" class="btn2 px-3 py-2 text-sm">Exit</button></div>
+<div class="p-4 max-w-7xl mx-auto">
+<div id="t1" class="grid lg:grid-cols-2 gap-6"><div class="space-y-2">
+<div class="flex gap-2"><select id="sel"></select><button id="nw" class="btn whitespace-nowrap">+ New Story</button><button id="del" class="btn2 px-3 text-sm">Delete</button></div>
+<input id="f_title" placeholder="Headline"><input id="f_slug" placeholder="slug (auto)"><div class="grid grid-cols-2 gap-2"><select id="f_cat"></select><input id="f_author" placeholder="Author"></div>
+<textarea id="f_ex" rows="2" placeholder="Excerpt (2 lines)"></textarea>
+<div class="flex gap-1"><button class="fm btn2 px-3 font-bold" data-o="<b>" data-c="</b>">B</button><button class="fm btn2 px-3 italic" data-o="<i>" data-c="</i>">I</button><button class="fm btn2 px-3" data-o="<h3>" data-c="</h3>">H</button><button class="fm btn2 px-3" data-o="<blockquote>" data-c="</blockquote>">❝</button></div>
+<textarea id="f_body" rows="10" placeholder="Story text. Blank line = new paragraph. Use toolbar for formatting."></textarea>
+<input id="f_yt" placeholder="YouTube URL (youtube.com/watch?v= or youtu.be/…)"><input id="f_sp" placeholder="Spotify embed URL (optional)">
+<div class="flex gap-6"><label class="sw"><input type="checkbox" id="f_feat" style="width:auto"> Featured Lead</label><label class="sw"><input type="checkbox" id="f_brk" style="width:auto"> Breaking News</label><label class="sw"><input type="checkbox" id="f_draft" style="width:auto"> Draft (hidden)</label></div><div class="grid grid-cols-2 gap-2"><input type="datetime-local" id="f_date"><select id="f_media"></select></div>
+<div id="drop" class="border-2 border-dashed hair p-6 text-center cursor-pointer text-sm">Drag &amp; drop cover image (PNG, JPG, BMP, GIF, WEBP, AVIF) or click<input type="file" id="file" accept="image/*" class="hid"></div>
+<div id="cbadge" class="meta"></div><img id="cprev" class="hid w-40">
+<div id="cbtn" class="hid flex gap-2 flex-wrap"><button id="b1" class="btn">Save .webp for /images/ Folder (Recommended)</button><button id="b2" class="btn2 px-3 text-sm font-bold">Embed Directly in JSON</button></div>
+<button id="sv" class="btn w-full">Save Story</button></div>
+<div><div class="meta mb-2">Live preview</div><div id="pv" class="border hair p-3"></div></div></div>
+<div id="t2" class="hid max-w-2xl space-y-2"><div class="flex gap-2"><input id="v_t" placeholder="Video title"><input id="v_u" placeholder="YouTube URL"><button id="v_a" class="btn">Add</button></div><div id="v_l"></div></div>
+<div id="t3" class="hid max-w-3xl"><div id="h_l" class="space-y-2"></div><button id="h_s" class="btn mt-3">Apply chart</button></div><div id="t4" class="hid"></div><div id="t5" class="hid"></div><div id="t6" class="hid"></div>
+</div></div></div></div>
+
+<script>
+const PASS='BARZ2026';
+const CATS=['Kenyan Music','East Africa','Global & UK/US','Street Culture','Lifestyle & Fashion','Interviews','Barz Daily TV'];
+const now=Date.now(),H=36e5;
+const mk=(i,t,c,ex,h,o={})=>({id:'a'+i,slug:t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''),title:t,category:c,excerpt:ex,body:ex+'\n\n'+'Across Nairobi, from Kasarani studios to Kisumu stages, a generation of artists is rewriting the rules of the local industry.\n\n<h3>The sound on the street</h3>\n\nProducers trade drum patterns on WhatsApp, rappers cut freestyles in matatu stages, and the audience decides in real time what stays.\n\n<blockquote>The matatu is the first radio station. If it bangs there, it is a hit.</blockquote>\n\nThe next twelve months will decide whether this moment becomes an industry.',author:'Barz Daily Desk',published:now-h*H,imageUrl:'',youtubeId:'',spotify:'',featured:false,breaking:false,...o});
+const DEFAULT_DATA={site:{name:'BARZ',badge:'DAILY',tag:"Kenya's Pulse in Music, Culture & Entertainment",parent:'Worldwide Entertainment Production',parentUrl:'https://wweproduction.vercel.app',email:'submit@barzdaily.co.ke',yt:'',ig:'',tt:'',x:'',accent:'var(--acc)',ticker:true,about:'A new newsroom built for the people who actually listen: the ones who know the difference between a hit and a moment.'},
+sections:[{id:'s1',type:'hero',title:'Top Stories'},{id:'s2',type:'cat',title:'Kenyan Music',cat:'Kenyan Music',count:4},{id:'s3',type:'tv',title:'Videos & Freestyles'},{id:'s4',type:'news',title:'Get the pulse of Nairobi in your inbox.'},{id:'s5',type:'cat',title:'Street Culture & Style',cat:'Street Culture',count:4},{id:'s6',type:'cat',title:'Lifestyle & Fashion',cat:'Lifestyle & Fashion',count:4},{id:'s7',type:'cat',title:'Interviews',cat:'Interviews',count:4},{id:'s8',type:'hot',title:'Hot 10 · Kenya'}],media:[],
+articles:[
+mk(1,'Bedsitter Studios Are Rewriting Nairobi\'s Sound','Kenyan Music','Home studios in Umoja and Kasarani are producing the records topping the charts.',2,{featured:true,breaking:true,youtubeId:'dQw4w9WgXcQ'}),
+mk(2,'Nairobi to Dar to Kampala: The Collab Circuit Rewriting the Charts','East Africa','Cross-border features are now the fastest route to a regional hit.',10),
+mk(3,'Arbantone Is the Sound of the Matatu at Midnight','Kenyan Music','The genre refuses to be boxed in, and the youth keep it loud.',24,{breaking:true}),
+mk(4,'The Producers Behind Kenya\'s Coldest 808s','Kenyan Music','Meet the beatmakers shaping the sound of the year.',26),
+mk(5,'Kisumu Is Building Its Own Scene, One Lakeside Session at a Time','Kenyan Music','Away from Nairobi, a lakeside movement is finding its voice.',28),
+mk(6,'From Nairobi to Peckham: The Drill Bridge Nobody Expected','Global & UK/US','Kenyan producers are borrowing UK drill\'s architecture and sending back something new.',30,{breaking:true}),
+mk(7,'Gikomba Style: The Thrift Economy Dressing Nairobi\'s Stages','Street Culture','Second-hand markets are the unofficial stylists of the scene.',50),
+mk(8,'Sheng Is the New Hook Language','Street Culture','Writers are turning street slang into choruses.',55),
+mk(9,'Runway to Rongai: Kenyan Fashion Gets Loud','Lifestyle & Fashion','Designers mix kitenge and streetwear for a new look.',60),
+mk(10,'Three Managers Explain What They Actually Spend on a Release','Interviews','Budgets, bribes and bold bets: managers speak candidly.',96),
+mk(11,'One Mic, One Take: The Freestyle Session That Set the Tone','Barz Daily TV','Watch the session everybody is talking about.',98,{youtubeId:'dQw4w9WgXcQ'}),
+mk(12,'The Continent\'s Biggest Export Is Changing Its Accent','Global & UK/US','Afrobeats, amapiano and now Nairobi\'s tempo.',100)],
+videos:[{t:'Nairobi Cypher Vol. 1',id:'dQw4w9WgXcQ'},{t:'Freestyle Friday: Studio A',id:'dQw4w9WgXcQ'},{t:'Producer Interview: 808s',id:'dQw4w9WgXcQ'}],
+hot:[['Mtonyo','Vijana Faya','UP'],['Bedsitter Anthem','Nairobi North','NEW'],['Kesho','Sauti Moto ft. Zawadi','DOWN'],['Matatu Bass','Ghetto Grammer','UP'],['Nairobi Nights','Amani K','HOLD'],['Pepeta','Wanjiku M','UP'],['Lakeside','Osiepe','DOWN'],['Cold 808','Producer Kesh','NEW'],['Sema Nami','Baraka','DOWN'],['Street Gospel','Mtaa Choir','UP']].map(([t,a,m])=>({title:t,artist:a,move:m,yt:''}))};
+let base="",D=DEFAULT_DATA,cat='All',query='',cur=null,imgData=null,imgName='';
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ago=t=>{const h=Math.round((Date.now()-t)/H);return h<1?'Just now':h<24?h+' hours ago':Math.round(h/24)+' days ago'};
+const ytid=u=>{const m=String(u||'').match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);return m?m[1]:(/^[\w-]{11}$/.test(u)?u:'')};
+const slugify=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const img=a=>a.imageUrl?`<img src="${esc(a.imageUrl)}" alt="" loading="lazy">`:`<div class="ph"></div>`;
+const sorted=all=>[...D.articles].filter(a=>all||!a.draft).sort((a,b)=>b.published-a.published);
+function clock(){$('#clock').textContent=new Date().toLocaleString('en-GB',{timeZone:'Africa/Nairobi',weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:false})+' EAT'}
+setInterval(clock,3e4);clock();
+async function load(){try{const r=await fetch('./articles.json?v='+Date.now());if(!r.ok)throw 0;const j=await r.json();if(j.articles){D={...DEFAULT_DATA,...j};D.site={...DEFAULT_DATA.site,...j.site}}}catch(e){D=JSON.parse(JSON.stringify(DEFAULT_DATA))}base=json();route()}
+function nav(){$('#cats').innerHTML=['All',...CATS].map(c=>`<button class="py-3 whitespace-nowrap ${c==cat?'tab on':'tab'}" data-c="${esc(c)}">${c==='All'?'Home':esc(c)}</button>`).join('');$$('#cats button').forEach(b=>b.onclick=()=>{cat=b.dataset.c;query='';go('')})}
+function small(a){return `<a href="#article/${a.slug}" class="card block"><div>${img(a)}</div><span class="tag mt-3">${esc(a.category)}</span><h3 class="hl text-lg mt-2">${esc(a.title)}</h3><p class="mut text-sm mt-1">${esc(a.excerpt)}</p><div class="meta mt-2">${ago(a.published)}</div></a>`}
+const wrap=(t,sub,inner)=>`<section class="max-w-7xl mx-auto px-4 py-8"><div class="flex justify-between border-b-2 pb-1 mb-5" style="border-color:var(--ink)"><h2 class="hl text-2xl uppercase">${esc(t)}</h2>${sub}</div>${inner}</section>`;
+const SEC={
+hero(s,L){const lead=L.find(a=>a.featured)||L[0];if(!lead)return'<p class="mut py-20 text-center">No stories found.</p>';const rest=L.filter(a=>a!==lead);
+ return `<section class="max-w-7xl mx-auto px-4 py-8 grid gap-8 lg:grid-cols-4"><a href="#article/${lead.slug}" class="lg:col-span-2 block card">${img(lead)}<span class="tag mt-4">${esc(lead.category)}</span><h1 class="hl text-4xl mt-2">${esc(lead.title)}</h1><p class="mut mt-2 line-clamp-2">${esc(lead.excerpt)}</p><div class="meta mt-3">${esc(lead.author)} · ${ago(lead.published)}</div></a><div class="space-y-6 lg:border-l lg:pl-6 hair">${rest.slice(0,2).map(small).join('')}</div><aside class="lg:border-l lg:pl-6 hair"><h3 class="hl text-lg uppercase border-b-2 pb-2" style="border-color:var(--ink)">Most Read in Nairobi</h3>${rest.slice(0,5).map((a,i)=>`<a href="#article/${a.slug}" class="flex gap-3 py-3 border-b hair"><span class="hl text-2xl" style="color:var(--acc)">${String(i+1).padStart(2,'0')}</span><div><div class="hl text-base">${esc(a.title)}</div><div class="meta mt-1">${esc(a.category)} | ${ago(a.published)}</div></div></a>`).join('')}</aside></section>`},
+cat(s,L){const r=L.filter(a=>!s.cat||s.cat==='All'||a.category===s.cat).slice(0,s.count||4);return r.length?wrap(s.title,s._f?'':`<button data-c="${esc(s.cat)}" class="seeall meta" style="color:var(--acc)">See all →</button>`,`<div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-5">${r.map(small).join('')}</div>`):''},
+tv(s){return `<section style="background:#121212;color:#fff" class="py-12"><div class="max-w-7xl mx-auto px-4"><div class="meta mb-1" style="color:var(--acc)">Barz Daily TV</div><h2 class="hl text-4xl mb-6">${esc(s.title)}</h2><div class="grid lg:grid-cols-3 gap-6"><div class="lg:col-span-2"><div style="aspect-ratio:16/9"><iframe id="player" class="w-full h-full" allowfullscreen title="Player"></iframe></div><div id="ptitle" class="hl text-xl mt-3"></div></div><div id="queue" class="space-y-3 max-h-[420px] overflow-y-auto">${D.videos.map((v,i)=>`<button data-i="${i}" class="flex gap-3 text-left w-full items-center"><img src="https://i.ytimg.com/vi/${ytid(v.id)}/mqdefault.jpg" class="w-32" alt=""><span class="font-bold text-sm">${esc(v.t)}</span></button>`).join('')}</div></div></div></section>`},
+news(s){return `<section style="background:#121212;color:#fff" class="py-14"><div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-8 items-center"><div><div class="meta" style="color:var(--acc)">The Barz Daily Drop</div><h2 class="hl text-4xl md:text-5xl mt-2">${esc(s.title)}</h2><p class="mt-3" style="color:#bbb">New music, scene reports, interviews and the weekly Hot 10, every Friday.</p></div><form onsubmit="location.href='mailto:'+D.site.email+'?subject=Newsletter signup&body='+encodeURIComponent(this.e.value);return false" class="space-y-3"><input name="e" type="email" required placeholder="Your email" style="background:transparent;border-radius:99px;padding:14px 22px"><button class="btn w-full" style="border-radius:99px;padding:16px">Sign me up →</button></form></div></section>`},
+hot(s){return `<section class="bg2"><div class="max-w-7xl mx-auto px-4 py-10"><div class="meta" style="color:var(--acc)">The Weekly Chart</div><h2 class="hl text-4xl mb-3 pb-3 border-b-2" style="border-color:var(--ink)">${esc(s.title)}</h2><div class="grid md:grid-cols-2 gap-x-10">${D.hot.map((h,i)=>`<div class="flex items-center gap-3 py-3 border-b hair"><span class="mono font-bold text-xl w-8 mut">${String(i+1).padStart(2,'0')}</span><span class="w-14 h-14 flex items-center justify-center font-bold text-white text-sm" style="background:hsl(${i*47%360} 45% 24%)">${esc(h.artist.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase())}</span><div class="flex-1 leading-tight"><div class="font-bold">${esc(h.title)}</div><div class="mut text-sm">${esc(h.artist)}</div></div><span class="meta" style="color:${h.move==='UP'?'#16a34a':h.move==='NEW'?'var(--acc)':''}">${h.move==='UP'?'▲ Up':h.move==='DOWN'?'▼ Down':h.move==='NEW'?'New':'— Hold'}</span>${ytid(h.yt)?`<a class="btn2 px-3 py-2" target="_blank" rel="noopener" href="https://youtu.be/${ytid(h.yt)}">▶</a>`:''}</div>`).join('')}</div></div></section>`},
+html(s){return wrap(s.title,'',`<div class="art">${s.html||''}</div>`)}};
+function home(){
+ let L=sorted();const f=cat!=='All'||query;
+ if(cat!=='All')L=L.filter(a=>a.category===cat);if(query)L=L.filter(a=>(a.title+a.excerpt+a.category).toLowerCase().includes(query.toLowerCase()));
+ const br=sorted().filter(a=>a.breaking),on=D.site.ticker!==false&&br.length;$('#brk').classList.toggle('hid',!on);
+ const t=br.map(a=>`<a href="#article/${a.slug}" class="mr-10">${esc(a.title)}</a>`).join('<span class="mr-10">/</span>');$('#tk').innerHTML=t+'<span class="mr-10">/</span>'+t;
+ let secs=D.sections.filter(x=>x.visible!==false);
+ if(f)secs=[{type:'hero'},{type:'cat',title:query?'Results for "'+query+'"':cat,cat:'All',count:24,_f:1},...(cat==='Barz Daily TV'?secs.filter(x=>x.type==='tv'):[])];
+ $('#secs').innerHTML=secs.map(x=>(SEC[x.type]||(()=>''))(x,f&&x.type!=='hero'?L:L)).join('');
+ $$('.seeall').forEach(b=>b.onclick=()=>{cat=b.dataset.c;go('');route();scrollTo(0,0)});
+ if($('#player')){$$('#queue button').forEach(b=>b.onclick=()=>play(+b.dataset.i));play(0)}}
+function play(i){const v=D.videos[i];if(!v)return;$('#player').src='https://www.youtube.com/embed/'+ytid(v.id)+'?rel=0';$('#ptitle').textContent=v.t}
+function applySite(){const s=D.site;document.title=s.name+' — '+s.tag;document.documentElement.style.setProperty('--acc',s.accent);
+ $('#logo').innerHTML=`${esc(s.name)}<span class="tag ml-1" style="font-size:20px">${esc(s.badge)}</span>`;
+ $('#soc').innerHTML=[['YouTube',s.yt],['Instagram',s.ig],['TikTok',s.tt],['X',s.x]].filter(x=>x[1]).map(([n,u])=>`<a target="_blank" rel="noopener" href="${esc(u)}">${n}</a>`).join('');
+ $('#par').textContent=s.parent+' ↗';$('#par').href=s.parentUrl;
+ $('#foot').innerHTML=`<div class="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-2 gap-8"><div><div class="hl text-3xl text-white">${esc(s.name)}<span class="tag ml-1">${esc(s.badge)}</span></div><p class="meta mt-3">${esc(s.tag)}</p><p class="mt-3 text-sm" style="color:#aaa">${esc(s.about)}</p></div><div class="flex flex-wrap gap-x-6 gap-y-2 content-start">${CATS.map(c=>`<a href="#" data-fc="${esc(c)}" class="text-sm">${esc(c)}</a>`).join('')}</div></div><div class="max-w-7xl mx-auto px-4 pb-8 meta">© 2026 ${esc(s.name)} ${esc(s.badge)} · ${esc(s.parent)} · Nairobi, Kenya · EAT <a href="#editor" title="Editor">🔒</a></div>`;
+ $$('[data-fc]').forEach(a=>a.onclick=e=>{e.preventDefault();cat=a.dataset.fc;query='';go('');route();scrollTo(0,0)})}
+function reader(slug){
+ const a=D.articles.find(x=>x.slug===slug);if(!a){go('');return}
+ const body=a.body.split(/\n\n+/).map(p=>/^<(h3|blockquote)/.test(p)?p:`<p>${p}</p>`).join('');
+ const url=encodeURIComponent(location.href),tt=encodeURIComponent(a.title);
+ const rel=sorted().filter(x=>x!==a&&x.category===a.category).concat(sorted().filter(x=>x!==a)).slice(0,3);
+ $('#reader').innerHTML=`<a href="#" onclick="go('');return false" class="meta">← Back</a><div class="mt-4"><span class="tag">${esc(a.category)}</span></div><h1 class="hl text-4xl md:text-5xl mt-3">${esc(a.title)}</h1><p class="mut text-xl mt-3">${esc(a.excerpt)}</p><div class="meta my-4">${esc(a.author)} · ${ago(a.published)}</div>${img(a)}
+ <div class="art mt-6">${body}</div>
+ ${ytid(a.youtubeId)?`<div style="aspect-ratio:16/9" class="my-6"><iframe class="w-full h-full" src="https://www.youtube.com/embed/${ytid(a.youtubeId)}" allowfullscreen title="Video"></iframe></div>`:''}
+ ${a.spotify?`<iframe class="w-full my-6" height="152" src="${esc(a.spotify)}" title="Spotify"></iframe>`:''}
+ <div class="flex gap-2 my-6"><a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=${tt}%20${url}">WhatsApp</a><a class="btn" style="background:#000" target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=${tt}&url=${url}">Share on X</a></div>
+ <div class="bg2 p-4 flex gap-4 items-center"><div class="hl text-2xl w-14 h-14 flex items-center justify-center" style="background:#121212;color:#fff">${esc((a.author||'B')[0])}</div><div><b>${esc(a.author)}</b><div class="mut text-sm">Writing for Barz Daily, Kenya's pulse in music, culture & entertainment.</div></div></div>
+ <h3 class="hl text-2xl mt-10 mb-4 border-b-2 pb-1" style="border-color:var(--ink)">Related Stories</h3><div class="grid sm:grid-cols-3 gap-5">${rel.map(small).join('')}</div>`;
+}
+function show(m){['#secs','#reader','#brk','#editor'].forEach(x=>$(x).classList.add('hid'));document.body.style.overflow='';if(m==='home')['#secs','#brk'].forEach(x=>$(x).classList.remove('hid'));if(m==='reader')$('#reader').classList.remove('hid');if(m==='editor'){$('#editor').classList.remove('hid');document.body.style.overflow='hidden'}}
+function go(h){location.hash=h;if(!h&&!location.hash)route()}
+function route(){const h=location.hash.slice(1);applySite();nav();
+ if(h.startsWith('article/')){show('reader');reader(h.slice(8));scrollTo(0,0)}
+ else if(h==='editor'){show('editor');if(!window._auth){$('#gate').classList.remove('hid');$('#studio').classList.add('hid')}else openStudio()}
+ else{show('home');home()}}
+addEventListener('hashchange',route);
+$('#sf').onsubmit=e=>{e.preventDefault();query=$('#q').value.trim();cat='All';go('');route()};
+$('#dm').onclick=()=>{document.documentElement.classList.toggle('dark');try{localStorage.setItem('bd',document.documentElement.classList.contains('dark')?1:0)}catch(e){}};
+try{if(localStorage.getItem('bd')==1)document.documentElement.classList.add('dark')}catch(e){}
+$('#sub').onclick=()=>$('#modal').classList.remove('hid');
+$('#subf').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);location.href='mailto:'+D.site.email+'?subject='+encodeURIComponent('Submission: '+f.get('a'))+'&body='+encodeURIComponent([...f].map(x=>x.join(': ')).join('\n'));$('#modal').classList.add('hid')};
+/* EDITOR */
+$('#pwb').onclick=()=>{if($('#pw').value===PASS){window._auth=1;openStudio()}else $('#pwe').textContent='Wrong passcode'};
+$('#pw').onkeydown=e=>{if(e.key==='Enter')$('#pwb').click()};
+$$('.tab[data-t]').forEach(b=>b.onclick=()=>{$$('.tab[data-t]').forEach(x=>x.classList.remove('on'));b.classList.add('on');['t1','t2','t3','t4','t5','t6'].forEach(t=>$('#'+t).classList.toggle('hid',t!==b.dataset.t));const fn={t2:vidEd,t3:hotEd,t4:siteEd,t5:secEd,t6:medEd}[b.dataset.t];fn&&fn()});
+function openStudio(){$('#gate').classList.add('hid');$('#studio').classList.remove('hid');$('#f_cat').innerHTML=CATS.map(c=>`<option>${c}</option>`).join('');selList();newStory()}
+function selList(){$('#sel').innerHTML='<option value="">— Load story —</option>'+sorted(1).map(a=>`<option value="${a.id}">${esc(a.title)}</option>`).join('')}
+const F=['title','slug','cat','author','ex','body','yt','sp'];
+function newStory(){cur={id:'a'+Date.now(),slug:'',title:'',category:CATS[0],excerpt:'',body:'',author:'Barz Daily Desk',published:Date.now(),imageUrl:'',youtubeId:'',spotify:'',featured:false,breaking:false,_new:1};fill()}
+function fill(){$('#f_title').value=cur.title;$('#f_slug').value=cur.slug;$('#f_cat').value=cur.category;$('#f_author').value=cur.author;$('#f_ex').value=cur.excerpt;$('#f_body').value=cur.body;$('#f_yt').value=cur.youtubeId;$('#f_sp').value=cur.spotify;$('#f_feat').checked=cur.featured;$('#f_brk').checked=cur.breaking;$('#f_draft').checked=!!cur.draft;$('#f_date').value=new Date(cur.published-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,16);mediaSel();imgData=null;$('#cbtn').classList.add('hid');$('#cprev').classList.add('hid');$('#cbadge').textContent=cur.imageUrl?'Cover: '+(cur.imageUrl.startsWith('data:')?'embedded WebP':cur.imageUrl):'';preview()}
+function read(){cur.title=$('#f_title').value;cur.slug=$('#f_slug').value||slugify(cur.title);cur.category=$('#f_cat').value;cur.author=$('#f_author').value;cur.excerpt=$('#f_ex').value;cur.body=$('#f_body').value;cur.youtubeId=ytid($('#f_yt').value);cur.spotify=$('#f_sp').value;cur.featured=$('#f_feat').checked;cur.breaking=$('#f_brk').checked;cur.draft=$('#f_draft').checked;cur.published=new Date($('#f_date').value).getTime()||cur.published}
+function preview(){read();$('#pv').innerHTML=small(cur)+`<div class="art mt-6">${cur.body.split(/\n\n+/).map(p=>/^<(h3|blockquote)/.test(p)?p:`<p>${p}</p>`).join('')}</div>`}
+$('#f_title').oninput=()=>{if(!$('#f_slug').dataset.m)$('#f_slug').value=slugify($('#f_title').value)};$('#f_slug').oninput=e=>e.target.dataset.m=1;
+['#f_title','#f_slug','#f_cat','#f_author','#f_ex','#f_body','#f_yt','#f_sp','#f_feat','#f_brk','#f_draft','#f_date'].forEach(s=>$(s).addEventListener('input',preview));
+$$('.fm').forEach(b=>b.onclick=()=>{const t=$('#f_body'),s=t.selectionStart,e=t.selectionEnd;t.value=t.value.slice(0,s)+b.dataset.o+t.value.slice(s,e)+b.dataset.c+t.value.slice(e);preview()});
+$('#sel').onchange=e=>{const a=D.articles.find(x=>x.id===e.target.value);if(a){cur={...a};fill()}};
+$('#nw').onclick=newStory;
+$('#del').onclick=()=>{if(cur&&!cur._new&&confirm('Delete this story?')){D.articles=D.articles.filter(a=>a.id!==cur.id);selList();newStory()}};
+$('#sv').onclick=()=>{read();if(!cur.title)return alert('Headline required');if(D.articles.some(a=>a.slug===cur.slug&&a.id!==cur.id))return alert('Another story already uses this slug — change it.');const c={...cur};delete c._new;const i=D.articles.findIndex(a=>a.id===c.id);i<0?D.articles.push(c):D.articles[i]=c;cur=c;selList();$('#sel').value=c.id;alert('Saved. Download articles.json to publish.')};
+/* IMAGE PIPELINE */
+const drop=$('#drop');drop.onclick=()=>$('#file').click();
+drop.ondragover=e=>{e.preventDefault();drop.style.background='var(--bg2)'};drop.ondragleave=()=>drop.style.background='';
+drop.ondrop=e=>{e.preventDefault();drop.style.background='';e.dataTransfer.files[0]&&conv(e.dataTransfer.files[0])};
+$('#file').onchange=e=>e.target.files[0]&&conv(e.target.files[0]);
+const kb=n=>n>1048576?(n/1048576).toFixed(1)+' MB':Math.round(n/1024)+' KB';
+async function proc(f){if(!f.type.startsWith('image/'))throw 0;const bm=await createImageBitmap(f),r=Math.min(1,1200/bm.width),c=document.createElement('canvas');c.width=Math.round(bm.width*r);c.height=Math.round(bm.height*r);c.getContext('2d').drawImage(bm,0,0,c.width,c.height);const blob=await new Promise(x=>c.toBlob(x,'image/webp',.82)),url=await new Promise(x=>{const fr=new FileReader();fr.onload=()=>x(fr.result);fr.readAsDataURL(blob)});return{blob,url,name:slugify(f.name.replace(/\.[^.]+$/,''))||'image',msg:`Converted to WebP: ${kb(f.size)} → ${kb(blob.size)} (-${Math.max(0,Math.round((1-blob.size/f.size)*100))}%)`}}
+async function conv(f){try{const p=await proc(f);imgData=p.blob;imgName=p.url;$('#cbadge').textContent=p.msg;$('#cprev').src=p.url;$('#cprev').classList.remove('hid');$('#cbtn').classList.remove('hid')}catch(e){alert('Could not decode this image in your browser.')}}
+$('#b1').onclick=()=>{read();const s=cur.slug||slugify(cur.title)||'cover';cur.slug=s;$('#f_slug').value=s;const a=document.createElement('a');a.href=URL.createObjectURL(imgData);a.download=s+'.webp';a.click();cur.imageUrl='./images/'+s+'.webp';$('#cbadge').textContent+=' · imageUrl → '+cur.imageUrl;preview()};
+$('#b2').onclick=()=>{read();cur.imageUrl=imgName;$('#cbadge').textContent+=' · embedded in JSON';preview()};
+/* TV + HOT */
+function vidEd(){$('#v_l').innerHTML=D.videos.map((v,i)=>`<div class="flex gap-2 items-center border-b hair py-2"><span class="flex-1 text-sm">${esc(v.t)} <span class="meta">${esc(v.id)}</span></span><button data-i="${i}" data-d="-1">↑</button><button data-i="${i}" data-d="1">↓</button><button data-i="${i}" data-d="0">✕</button></div>`).join('');
+ $$('#v_l button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,d=+b.dataset.d;if(!d)D.videos.splice(i,1);else{const j=i+d;if(D.videos[j])[D.videos[i],D.videos[j]]=[D.videos[j],D.videos[i]]}vidEd()})}
+$('#v_a').onclick=()=>{const id=ytid($('#v_u').value);if(!id||!$('#v_t').value)return alert('Title and valid YouTube URL needed');D.videos.push({t:$('#v_t').value,id});$('#v_t').value=$('#v_u').value='';vidEd()};
+function hotEd(){$('#h_l').innerHTML=D.hot.map((h,i)=>`<div class="grid grid-cols-12 gap-1 items-center"><b class="mono">${i+1}</b><input class="col-span-3" value="${esc(h.artist)}" data-k="artist" data-i="${i}"><input class="col-span-3" value="${esc(h.title)}" data-k="title" data-i="${i}"><select class="col-span-2" data-k="move" data-i="${i}">${['UP','DOWN','HOLD','NEW'].map(m=>`<option ${m===h.move?'selected':''}>${m}</option>`).join('')}</select><input class="col-span-3" placeholder="YouTube link" value="${esc(h.yt)}" data-k="yt" data-i="${i}"></div>`).join('')}
+$('#h_s').onclick=()=>{$$('#h_l [data-k]').forEach(e=>D.hot[+e.dataset.i][e.dataset.k]=e.value);alert('Chart updated')};
+/* SITE / SECTIONS / MEDIA */
+function siteEd(){const s=D.site;$('#t4').innerHTML=`<div class="grid md:grid-cols-2 gap-3 max-w-3xl">`+[['name','Site name'],['badge','Badge text'],['tag','Tagline'],['parent','Parent company'],['parentUrl','Parent URL'],['email','Submissions email'],['yt','YouTube URL'],['ig','Instagram URL'],['tt','TikTok URL'],['x','X URL']].map(([k,l])=>`<label class="meta">${l}<input data-s="${k}" value="${esc(s[k])}"></label>`).join('')+`<label class="meta">Accent colour<input type="color" data-s="accent" value="${s.accent}" style="height:40px"></label><label class="meta md:col-span-2">Footer blurb<textarea data-s="about" rows="3">${esc(s.about)}</textarea></label><label class="sw md:col-span-2"><input type="checkbox" id="s_tk" style="width:auto" ${s.ticker!==false?'checked':''}> Show breaking ticker</label></div><button id="s_ap" class="btn mt-4">Apply to live site</button>`;
+ $('#s_ap').onclick=()=>{$$('#t4 [data-s]').forEach(e=>s[e.dataset.s]=e.value);s.ticker=$('#s_tk').checked;applySite();alert('Applied. Click Exit to see the live site, then Download articles.json to publish.')}}
+const TYPES={hero:'Hero grid',cat:'Category row',tv:'Barz Daily TV',hot:'Hot 10 chart',news:'Newsletter',html:'Custom text/HTML block'};
+function secEd(){const S=D.sections;$('#t5').innerHTML=`<div class="max-w-3xl space-y-2"><p class="meta">Order here = order on the live homepage.</p>`+S.map((s,i)=>`<div class="border hair p-3 grid grid-cols-12 gap-2 items-center"><b class="col-span-12 sm:col-span-3 text-sm">${TYPES[s.type]}</b><input class="col-span-12 sm:col-span-4" data-i="${i}" data-k="title" value="${esc(s.title||'')}" placeholder="Title">${s.type==='cat'?`<select class="col-span-8 sm:col-span-3" data-i="${i}" data-k="cat">${['All',...CATS].map(c=>`<option ${c===s.cat?'selected':''}>${esc(c)}</option>`).join('')}</select><input type="number" min="1" max="24" class="col-span-4 sm:col-span-2" data-i="${i}" data-k="count" value="${s.count||4}">`:''}${s.type==='html'?`<textarea class="col-span-12" rows="4" data-i="${i}" data-k="html" placeholder="Text / HTML. Media Library image paths work here.">${esc(s.html||'')}</textarea>`:''}<label class="sw col-span-4"><input type="checkbox" style="width:auto" data-i="${i}" data-k="visible" ${s.visible!==false?'checked':''}>Show</label><div class="col-span-8 flex gap-3 text-sm"><button data-a="up" data-i="${i}">↑ Up</button><button data-a="dn" data-i="${i}">↓ Down</button><button data-a="rm" data-i="${i}">✕ Remove</button></div></div>`).join('')+`<div class="flex gap-2 pt-2"><select id="s_new">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select><button id="s_add" class="btn whitespace-nowrap">+ Add section</button></div></div>`;
+ $$('#t5 [data-k]').forEach(e=>e.oninput=e.onchange=()=>{S[+e.dataset.i][e.dataset.k]=e.type==='checkbox'?e.checked:e.type==='number'?+e.value:e.value});
+ $$('#t5 [data-a]').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,a=b.dataset.a;if(a==='rm'){if(confirm('Remove this section?'))S.splice(i,1)}else{const j=i+(a==='up'?-1:1);if(S[j])[S[i],S[j]]=[S[j],S[i]]}secEd()});
+ $('#s_add').onclick=()=>{const t=$('#s_new').value;S.push({id:'s'+Date.now(),type:t,title:TYPES[t],cat:'All',count:4,visible:true});secEd()}}
+function mediaSel(){$('#f_media').innerHTML='<option value="">— Cover from Media Library —</option>'+D.media.map((m,i)=>`<option value="${i}">${esc(m.n)}</option>`).join('');$('#f_media').onchange=e=>{const m=D.media[e.target.value];if(m){read();cur.imageUrl=m.u;$('#cbadge').textContent='Cover: '+(m.u.startsWith('data:')?'embedded WebP':m.u);preview()}}}
+function medEd(){$('#t6').innerHTML=`<div class="max-w-4xl"><div id="mdrop" class="border-2 border-dashed hair p-8 text-center cursor-pointer text-sm">Drop images (PNG, JPG, BMP, GIF, WEBP, AVIF) or click. Auto-converted to WebP, max 1200px, quality 0.82.</div><input type="file" id="mfile" accept="image/*" multiple class="hid"><div id="mmsg" class="meta my-2"></div><div id="mgrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div></div>`;
+ const run=async fs=>{for(const f of fs){try{const p=await proc(f);D.media.push({n:p.name,u:p.url,_t:p.url});$('#mmsg').textContent=p.name+' — '+p.msg}catch(e){alert(f.name+': cannot read this image')}}grid()};
+ const d=$('#mdrop');d.onclick=()=>$('#mfile').click();d.ondragover=e=>e.preventDefault();d.ondrop=e=>{e.preventDefault();run(e.dataTransfer.files)};$('#mfile').onchange=e=>run(e.target.files);
+ function grid(){$('#mgrid').innerHTML=D.media.map((m,i)=>`<div class="border hair p-2"><img src="${esc(m._t||m.u)}" class="w-full" style="aspect-ratio:16/9;object-fit:cover" alt=""><div class="meta my-1 break-all">${esc(m.u.startsWith('data:')?m.n+' (embedded)':m.u)}</div><div class="flex flex-wrap gap-2 text-xs font-bold"><button data-a="sv" data-i="${i}">Save .webp</button><button data-a="cp" data-i="${i}">Copy URL</button><button data-a="cv" data-i="${i}">Use as cover</button><button data-a="rm" data-i="${i}">Remove</button></div></div>`).join('');
+  $$('#mgrid button').forEach(b=>b.onclick=async()=>{const m=D.media[+b.dataset.i],a=b.dataset.a;
+   if(a==='sv'){const bl=await (await fetch(m._t||m.u)).blob(),l=document.createElement('a');l.href=URL.createObjectURL(bl);l.download=m.n+'.webp';l.click();m._t=m._t||m.u;m.u='./images/'+m.n+'.webp';grid()}
+   if(a==='cp')try{await navigator.clipboard.writeText(m.u)}catch(e){prompt('Copy:',m.u)}
+   if(a==='cv'){cur.imageUrl=m.u;$('.tab[data-t=t1]').click();$('#cbadge').textContent='Cover set: '+(m.u.startsWith('data:')?'embedded':m.u);preview()}
+   if(a==='rm'){D.media.splice(+b.dataset.i,1);grid()}})}grid()}
+/* EXPORT */
+const json=()=>JSON.stringify(D,(k,v)=>k[0]==='_'?undefined:v,1);addEventListener('beforeunload',e=>{if(window._auth&&json()!==base){e.preventDefault();e.returnValue=''}});
+$('#dl').onclick=()=>{base=json();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([json()],{type:'application/json'}));a.download='articles.json';a.click()};
+$('#cp').onclick=async()=>{try{await navigator.clipboard.writeText(json());alert('JSON copied')}catch(e){prompt('Copy:',json())}};
+load();
+</script></body></html>
