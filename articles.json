@@ -44,16 +44,16 @@
  ],
  "sections": [
   {
+   "id": "s1",
+   "type": "hero",
+   "title": "Top Stories"
+  },
+  {
    "id": "s2",
    "type": "cat",
    "title": "Kenyan Music",
    "cat": "Kenyan Music",
    "count": 4
-  },
-  {
-   "id": "s1",
-   "type": "hero",
-   "title": "Top Stories"
   },
   {
    "id": "s4",
